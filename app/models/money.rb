@@ -2,8 +2,11 @@ class Money
   include Comparable
   attr_reader :amount, :currency
   EXCHANGE_RATES = { "USD_TO_DKK" => 6 }
+  CONCURRENCIES = %w[USD DKK]
 
   def initialize(amount, currency = "USD")
+    raise ArgumentError unless self.class.valid?(amount, currency)
+
     @amount, @currency = amount, currency
   end
 
@@ -23,6 +26,8 @@ class Money
       amount <=> other_money.exchange_to(currency).amount
     end
   end
+
+  def self.valid?(amount, currency)
+    amount >= 0 && CONCURRENCIES.include?(currency)
+  end
 end
-
-
